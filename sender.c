@@ -7,6 +7,7 @@
 #include "msg.h"    /* For the message struct */
 
 
+
 /* The size of the shared memory segment */
 #define SHARED_MEMORY_CHUNK_SIZE 1000
 

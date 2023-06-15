@@ -7,6 +7,7 @@
 #include <string>
 #include "msg.h"    /* For the message struct */
 
+
 using namespace std;
 
 /* The size of the shared memory segment */
