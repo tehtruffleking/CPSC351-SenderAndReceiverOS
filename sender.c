@@ -115,13 +115,25 @@ int main(int argc, char* argv[]) {
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <sys/msg.h>
+#include <signal.h>
 #include "msg2.h"
 
 #define SHARED_MEMORY_CHUNK_SIZE 1000
 #define MESSAGE_QUEUE_SIZE 10
 
+int shmid, msqid;
+void* sharedMemPtr;
+
+// Function to handle the SIGINT signal (Ctrl+C)
+void handleSIGINT(int sig) {
+    printf("Terminating sender...\n");
+    // Clean up shared memory and message queue
+    cleanUp(&shmid, &msqid, sharedMemPtr);
+    exit(0);
+}
+
 // Function to initialize shared memory and message queue
-void init(int* shmid, int* msqid, void** sharedMemPtr) {
+void init() {
     // Generate a key using ftok() based on a file and a character
     key_t key = ftok("keyfile.txt", 'a');
     if (key == -1) {
@@ -130,37 +142,37 @@ void init(int* shmid, int* msqid, void** sharedMemPtr) {
     }
 
     // Create or access shared memory segment
-    *shmid = shmget(key, SHARED_MEMORY_CHUNK_SIZE, 0666 | IPC_CREAT);
-    if (*shmid == -1) {
+    shmid = shmget(key, SHARED_MEMORY_CHUNK_SIZE, 0666 | IPC_CREAT);
+    if (shmid == -1) {
         perror("shmget");
         exit(1);
     }
 
     // Attach shared memory segment to process address space
-    *sharedMemPtr = shmat(*shmid, (void*)0, 0);
-    if (*sharedMemPtr == (void*)-1) {
+    sharedMemPtr = shmat(shmid, (void*)0, 0);
+    if (sharedMemPtr == (void*)-1) {
         perror("shmat");
         exit(1);
     }
 
     // Create or access message queue
-    *msqid = msgget(key, 0666 | IPC_CREAT);
-    if (*msqid == -1) {
+    msqid = msgget(key, 0666 | IPC_CREAT);
+    if (msqid == -1) {
         perror("msgget");
         exit(1);
     }
 }
 
 // Function to clean up shared memory and message queue
-void cleanUp(const int* shmid, const int* msqid, void* sharedMemPtr) {
+void cleanUp() {
     // Remove shared memory segment
-    if (shmctl(*shmid, IPC_RMID, NULL) == -1) {
+    if (shmctl(shmid, IPC_RMID, NULL) == -1) {
         perror("shmctl");
         exit(1);
     }
 
     // Remove message queue
-    if (msgctl(*msqid, IPC_RMID, NULL) == -1) {
+    if (msgctl(msqid, IPC_RMID, NULL) == -1) {
         perror("msgctl");
         exit(1);
     }
@@ -173,7 +185,7 @@ void cleanUp(const int* shmid, const int* msqid, void* sharedMemPtr) {
 }
 
 // Function to send a message through the message queue
-void send(const int msqid, struct message* msg) {
+void send(struct message* msg) {
     // Send the message to the message queue
     if (msgsnd(msqid, msg, sizeof(struct message) - sizeof(long), 0) == -1) {
         perror("msgsnd");
@@ -188,18 +200,23 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
 
-    int shmid, msqid;
+    struct sigaction sa;
+    sa.sa_handler = handleSIGINT;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sigaction(SIGINT, &sa, NULL);
+
     void* sharedMemPtr;
     struct message msg;
 
     // Initialize shared memory and message queue
-    init(&shmid, &msqid, &sharedMemPtr);
+    init();
 
     // Open the file
     FILE* file = fopen(argv[1], "r");
     if (file == NULL) {
         perror("fopen");
-        cleanUp(&shmid, &msqid, sharedMemPtr);
+        cleanUp();
         exit(1);
     }
 
@@ -210,7 +227,7 @@ int main(int argc, char* argv[]) {
         msg.mtype = 1;
         msg.size = bytesRead;
         // Send the message
-        send(msqid, &msg);
+        send(&msg);
         // Sleep for a short time
         usleep(1000);
     }
@@ -222,11 +239,10 @@ int main(int argc, char* argv[]) {
     msg.mtype = 1;
     strcpy(msg.payload, "end");
     msg.size = strlen(msg.payload) + 1;
-    send(msqid, &msg);
+    send(&msg);
 
     // Clean up shared memory and message queue
-    cleanUp(&shmid, &msqid, sharedMemPtr);
+    cleanUp();
 
     return 0;
 }
-
