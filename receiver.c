@@ -1,4 +1,14 @@
 /*
+
+ ######                                              
+#     # ######  ####  ###### # #    # ###### #####  
+#     # #      #    # #      # #    # #      #    # 
+######  #####  #      #####  # #    # #####  #    # 
+#   #   #      #      #      # #    # #      #####  
+#    #  #      #    # #      #  #  #  #      #   #  
+#     # ######  ####  ###### #   ##   ###### #    # 
+
+
    This program is a receiver that demonstrates inter-process communication 
    using shared memory and message queues.
    It receives messages from a sender program and writes them to a file.
