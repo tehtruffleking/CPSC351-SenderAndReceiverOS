@@ -1,5 +1,7 @@
 # CPSC351-OperatingSystems-SenderAndReceiver
 
+## **Authors: Team Kernel Kings - Abel Mendoza, Christian Marshall, Fernando Cerna, Gilbert Espino Solis, Sohrab Bahari**
+
 This repository contains the code for a simple sender and receiver program implemented in C, which demonstrates inter-process communication using shared memory and message queues in an operating system.
 
 ## Overview
