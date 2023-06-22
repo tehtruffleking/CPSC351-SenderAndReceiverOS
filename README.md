@@ -19,7 +19,7 @@ To run the sender and receiver programs, the following prerequisites should be m
 1. Clone the repository:
 
 ```shell
-gcc receiver.c -o receiver
+git clone https://github.com/abelxmendoza/CPSC351-SenderAndReceiverOS.git
 ```
 
 2. Compile the sender program:
@@ -60,9 +60,14 @@ Replace `<output_filename>` with the desired name of the file to save the receiv
 * **msg.h** : This header file defines the message structures used by the sender and receiver programs for inter-process communication. It includes structures such as `struct message` and `struct fileNameMsg` that define the format of messages exchanged between the sender and receiver.
 * **msg2.h** : This alternative header file also defines the message structures used by the sender and receiver programs for inter-process communication. It includes structures such as `struct message` and `struct fileNameMsg` with slightly different definitions compared to `msg.h`. Choose either `msg.h` or `msg2.h` based on your requirements.
 
+## Design of Sender and Receiver
+
+See Doc: [https://docs.google.com/document/d/1le0dxFglva1m8F39k4EDe-hh32uZOH5evqC40YH5QPw/edit?usp=sharing]()
+
 ## Contributing
 
 Contributions to this repository are welcome. If you find any issues or have suggestions for improvements, please create an issue or submit a pull request.
+
 
 ## License
 
