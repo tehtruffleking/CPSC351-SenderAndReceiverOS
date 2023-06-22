@@ -101,11 +101,10 @@ int main() {
     sa.sa_flags = 0;
     sigaction(SIGINT, &sa, NULL);
 
-    void* sharedMemPtr;
-    struct message msg;
-
     // Initialize shared memory and message queue
     init();
+
+    struct message msg;
 
     // Receive and process messages until "end" message is received
     while (1) {

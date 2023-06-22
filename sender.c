@@ -33,13 +33,31 @@ int shmid, msqid;
 void* sharedMemPtr;
 
 // Function to clean up shared memory and message queue
-void cleanUp(int* shmid, int* msqid, void* sharedMemPtr);
+void cleanUp() {
+    // Remove shared memory segment
+    if (shmctl(shmid, IPC_RMID, NULL) == -1) {
+        perror("shmctl");
+        exit(1);
+    }
+
+    // Remove message queue
+    if (msgctl(msqid, IPC_RMID, NULL) == -1) {
+        perror("msgctl");
+        exit(1);
+    }
+
+    // Detach shared memory segment from process address space
+    if (shmdt(sharedMemPtr) == -1) {
+        perror("shmdt");
+        exit(1);
+    }
+}
 
 // Function to handle the SIGINT signal (Ctrl+C)
 void handleSIGINT() {
     printf("Terminating sender...\n");
     // Clean up shared memory and message queue
-    cleanUp(&shmid, &msqid, sharedMemPtr);
+    cleanUp();
     exit(0);
 }
 
@@ -74,27 +92,6 @@ void init() {
     }
 }
 
-// Function to clean up shared memory and message queue
-void cleanUp(int* shmid, int* msqid, void* sharedMemPtr) {
-    // Remove shared memory segment
-    if (shmctl(*shmid, IPC_RMID, NULL) == -1) {
-        perror("shmctl");
-        exit(1);
-    }
-
-    // Remove message queue
-    if (msgctl(*msqid, IPC_RMID, NULL) == -1) {
-        perror("msgctl");
-        exit(1);
-    }
-
-    // Detach shared memory segment from process address space
-    if (shmdt(sharedMemPtr) == -1) {
-        perror("shmdt");
-        exit(1);
-    }
-}
-
 // Function to send a message through the message queue
 void send(struct message* msg) {
     // Send the message to the message queue
@@ -117,7 +114,6 @@ int main(int argc, char* argv[]) {
     sa.sa_flags = 0;
     sigaction(SIGINT, &sa, NULL);
 
-    void* sharedMemPtr;
     struct message msg;
 
     // Initialize shared memory and message queue
@@ -127,7 +123,7 @@ int main(int argc, char* argv[]) {
     FILE* file = fopen(argv[1], "r");
     if (file == NULL) {
         perror("fopen");
-        cleanUp(&shmid, &msqid, sharedMemPtr);
+        cleanUp();
         exit(1);
     }
 
@@ -153,7 +149,7 @@ int main(int argc, char* argv[]) {
     send(&msg);
 
     // Clean up shared memory and message queue
-    cleanUp(&shmid, &msqid, sharedMemPtr);
+    cleanUp();
 
     return 0;
 }
