@@ -32,8 +32,11 @@
 int shmid, msqid;
 void* sharedMemPtr;
 
+// Function to clean up shared memory and message queue
+void cleanUp(int* shmid, int* msqid, void* sharedMemPtr);
+
 // Function to handle the SIGINT signal (Ctrl+C)
-void handleSIGINT(int sig) {
+void handleSIGINT() {
     printf("Terminating sender...\n");
     // Clean up shared memory and message queue
     cleanUp(&shmid, &msqid, sharedMemPtr);
@@ -72,15 +75,15 @@ void init() {
 }
 
 // Function to clean up shared memory and message queue
-void cleanUp() {
+void cleanUp(int* shmid, int* msqid, void* sharedMemPtr) {
     // Remove shared memory segment
-    if (shmctl(shmid, IPC_RMID, NULL) == -1) {
+    if (shmctl(*shmid, IPC_RMID, NULL) == -1) {
         perror("shmctl");
         exit(1);
     }
 
     // Remove message queue
-    if (msgctl(msqid, IPC_RMID, NULL) == -1) {
+    if (msgctl(*msqid, IPC_RMID, NULL) == -1) {
         perror("msgctl");
         exit(1);
     }
@@ -124,7 +127,7 @@ int main(int argc, char* argv[]) {
     FILE* file = fopen(argv[1], "r");
     if (file == NULL) {
         perror("fopen");
-        cleanUp();
+        cleanUp(&shmid, &msqid, sharedMemPtr);
         exit(1);
     }
 
@@ -150,7 +153,7 @@ int main(int argc, char* argv[]) {
     send(&msg);
 
     // Clean up shared memory and message queue
-    cleanUp();
+    cleanUp(&shmid, &msqid, sharedMemPtr);
 
     return 0;
 }
