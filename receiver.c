@@ -14,7 +14,6 @@
    It receives messages from a sender program and writes them to a file.
 */
 
-#include "msg2.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -24,6 +23,7 @@
 #include <sys/shm.h>
 #include <sys/msg.h>
 #include <signal.h>
+#include "msg2.h"
 
 #define SHARED_MEMORY_CHUNK_SIZE 1000
 #define MESSAGE_QUEUE_SIZE 10
@@ -31,8 +31,11 @@
 int shmid, msqid;
 void* sharedMemPtr;
 
+// Function to clean up shared memory and message queue
+void cleanUp(int* shmid, int* msqid, void* sharedMemPtr);
+
 // Function to handle the SIGINT signal (Ctrl+C)
-void handleSIGINT(int sig) {
+void handleSIGINT() {
     printf("Terminating receiver...\n");
     // Clean up shared memory and message queue
     cleanUp(&shmid, &msqid, sharedMemPtr);
@@ -71,15 +74,15 @@ void init() {
 }
 
 // Function to clean up shared memory and message queue
-void cleanUp() {
+void cleanUp(int* shmid, int* msqid, void* sharedMemPtr) {
     // Remove shared memory segment
-    if (shmctl(shmid, IPC_RMID, NULL) == -1) {
+    if (shmctl(*shmid, IPC_RMID, NULL) == -1) {
         perror("shmctl");
         exit(1);
     }
 
     // Remove message queue
-    if (msgctl(msqid, IPC_RMID, NULL) == -1) {
+    if (msgctl(*msqid, IPC_RMID, NULL) == -1) {
         perror("msgctl");
         exit(1);
     }
@@ -91,80 +94,38 @@ void cleanUp() {
     }
 }
 
-// Function to receive the file name through the message queue
-void recvFileName(char* fileName) {
-    struct fileNameMsg msg;
-    msgrcv(msqid, &msg, sizeof(struct fileNameMsg) - sizeof(long), FILE_NAME_TRANSFER_TYPE, 0);
-    strcpy(fileName, msg.fileName);
-}
+int main() {
+    struct sigaction sa;
+    sa.sa_handler = handleSIGINT;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sigaction(SIGINT, &sa, NULL);
 
-// Main loop to receive and write messages to a file
-void mainLoop(const char* fileName) {
-    FILE* file = fopen(fileName, "w");
-    if (file == NULL) {
-        perror("fopen");
-        exit(1);
-    }
-
+    void* sharedMemPtr;
     struct message msg;
-    int msgSize;
-    while (1) {
-        // Receive a message from the message queue
-        msgrcv(msqid, &msg, sizeof(struct message) - sizeof(long), SENDER_DATA_TYPE, 0);
-        msgSize = msg.size;
-
-        // Check if the message size is 0, indicating the end of the file
-        if (msgSize == 0) {
-            break;
-        }
-
-        // Write the message payload to the file
-        fwrite(msg.payload, sizeof(char), msgSize, file);
-
-        // Send an acknowledgement message to the sender
-        struct ackMessage ack;
-        ack.mtype = RECV_DONE_TYPE;
-        msgsnd(msqid, &ack, sizeof(struct ackMessage) - sizeof(long), 0);
-    }
-
-    fclose(file);
-}
-
-int main(int argc, char* argv[]) {
-    // Check the command-line arguments
-    if (argc != 2) {
-        fprintf(stderr, "Usage: %s <filename>\n", argv[0]);
-        exit(1);
-    }
-
-    void (*prevHandler)(int);
-
-    // Set up signal handler for SIGINT (Ctrl+C)
-    prevHandler = signal(SIGINT, handleSIGINT);
-    if (prevHandler == SIG_ERR) {
-        perror("signal");
-        exit(1);
-    }
 
     // Initialize shared memory and message queue
     init();
 
-    char fileName[MAX_FILE_NAME_SIZE];
-    // Receive the file name through the message queue
-    recvFileName(fileName);
-    printf("Received file name: %s\n", fileName);
+    // Receive and process messages until "end" message is received
+    while (1) {
+        // Receive a message from the message queue
+        if (msgrcv(msqid, &msg, sizeof(struct message) - sizeof(long), 0, 0) == -1) {
+            perror("msgrcv");
+            cleanUp(&shmid, &msqid, sharedMemPtr);
+            exit(1);
+        }
 
-    // Enter the main loop to receive and write messages to the file
-    mainLoop(argv[1]);
+        // Check if it is the termination message
+        if (strcmp(msg.payload, "end") == 0)
+            break;
+
+        // Process the received message
+        printf("Received message: %s\n", msg.payload);
+    }
 
     // Clean up shared memory and message queue
-    cleanUp();
-
-    // Restore the previous signal handler for SIGINT
-    if (signal(SIGINT, prevHandler) == SIG_ERR) {
-        perror("signal");
-        exit(1);
-    }
+    cleanUp(&shmid, &msqid, sharedMemPtr);
 
     return 0;
 }
