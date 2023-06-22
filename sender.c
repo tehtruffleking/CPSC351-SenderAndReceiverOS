@@ -1,3 +1,8 @@
+/*
+   This program is a sender that demonstrates inter-process communication 
+   using shared memory and message queues.
+   It reads the contents of a file and transfers them to a receiver program.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
