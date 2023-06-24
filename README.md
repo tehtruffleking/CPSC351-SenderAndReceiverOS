@@ -4,7 +4,7 @@
 
 **Abel Mendoza: abel_mendoza10@csu.fullerton.edu**
 
-**Christian Marshall:**
+**Christian Marshall: christian.marshall.91@gmail.com**
 
 **Fernando Cerna: fernandocerna94@csu.fullerton.edu**
 
@@ -63,7 +63,6 @@ Replace `<filename>` with the path to the file you want to transfer. For our pro
 ```shell
 ./sender data.txt
 ```
-
 
 6. Run the receiver program:
 
