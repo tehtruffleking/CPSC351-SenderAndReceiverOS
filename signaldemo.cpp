@@ -10,6 +10,7 @@
 
 /* The counter which counts the number 
  * of times the user pressed Ctrl-C
+ -
  */
 int count = 9;
 

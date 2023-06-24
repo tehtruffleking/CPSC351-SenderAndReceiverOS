@@ -3,7 +3,8 @@
 
 #define MAX_MSG_PAYLOAD 100
 
-/* The information type */
+/* The information type -*/
+
 #define SENDER_DATA_TYPE 1
 
 /* The done message */

@@ -7,7 +7,8 @@
 /* The done message */
 #define RECV_DONE_TYPE 2
 
-/* The file name transfer message */
+
+/* The file name transfer message -*/
 #define FILE_NAME_TRANSFER_TYPE 3
 
 /* The maximum size of the file name */
