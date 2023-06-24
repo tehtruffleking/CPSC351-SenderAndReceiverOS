@@ -1,6 +1,6 @@
 # CPSC351-OperatingSystems-Sender and Receiver
 
-## **Authors: Team Kernel Kings -** 
+## **Authors: Team Kernel Kings -**
 
 **Abel Mendoza: abel_mendoza10@csu.fullerton.edu**
 
@@ -56,7 +56,7 @@ gcc receiver.c -o receiver
 ./sender <filename>
 ```
 
-Replace `<filename>` with the path to the file you want to transfer.
+Replace `<filename>` with the path to the file you want to transfer. For our project we use `data.txt`
 
 5. Run the receiver program:
 
@@ -79,6 +79,26 @@ Replace `<output_filename>` with the desired name of the file to save the receiv
 ## Design of Sender and Receiver
 
 See Doc: [https://docs.google.com/document/d/1le0dxFglva1m8F39k4EDe-hh32uZOH5evqC40YH5QPw/edit?usp=sharing]()
+
+
+## Team Contributions
+
+**Abel Mendoza**: Coordinated with group to get the sender and receiver scripts finished with all the rubric requirements. Wrote documentation for the project, put together a github repository with all the files, and also included a LICENSE and README.
+
+
+**Christian Marshall**: 
+
+
+**Fernando Cerna**: 
+
+
+**Gilbert Espino Solis**: 
+
+
+**Sohrab Bahari**: 
+
+[
+]()
 
 ## Contributing
 
