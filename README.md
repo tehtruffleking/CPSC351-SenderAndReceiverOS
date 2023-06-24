@@ -72,6 +72,12 @@ Replace `<output_filename>` with the desired name of the file to save the receiv
 
 7. The receiver program will create the `<output_filename>` file and write the received data into it.
 
+
+
+
+
+
+
 ## Additional Files
 
 * **signaldemo.cpp** : This file demonstrates how to handle signals in C++. It shows an example of a signal handler that catches and processes a `SIGINT` signal (Ctrl+C).
@@ -84,22 +90,17 @@ Replace `<output_filename>` with the desired name of the file to save the receiv
 
 See Doc: [https://docs.google.com/document/d/1le0dxFglva1m8F39k4EDe-hh32uZOH5evqC40YH5QPw/edit?usp=sharing]()
 
-
 ## Team Contributions
 
 **Abel Mendoza**: Coordinated with group to get the sender and receiver scripts finished with all the rubric requirements. Wrote documentation for the project, put together a github repository with all the files, and also included a LICENSE and README.
 
+**Christian Marshall**:
 
-**Christian Marshall**: 
+**Fernando Cerna**:
 
+**Gilbert Espino Solis**:
 
-**Fernando Cerna**: 
-
-
-**Gilbert Espino Solis**: 
-
-
-**Sohrab Bahari**: 
+**Sohrab Bahari**:
 
 [
 ]()
