@@ -58,7 +58,14 @@ gcc receiver.c -o receiver
 
 Replace `<filename>` with the path to the file you want to transfer. For our project we use `data.txt`
 
-5. Run the receiver program:
+5. Run the sender program:
+
+```shell
+./sender data.txt
+```
+
+
+6. Run the receiver program:
 
 ```shell
 ./receiver <output_filename>
@@ -66,7 +73,7 @@ Replace `<filename>` with the path to the file you want to transfer. For our pro
 
 Replace `<output_filename>` with the desired name of the file to save the received data.
 
-6. The receiver program will create the `<output_filename>` file and write the received data into it.
+7. The receiver program will create the `<output_filename>` file and write the received data into it.
 
 ## Additional Files
 
