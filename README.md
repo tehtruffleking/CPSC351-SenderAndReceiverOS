@@ -14,8 +14,6 @@
 
 ---
 
-## Introduction
-
 This repository contains the code for a simple sender and receiver program implemented in C, which demonstrates inter-process communication using shared memory and message queues in an operating system.
 
 ## Overview
