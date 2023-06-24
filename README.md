@@ -1,6 +1,20 @@
-# CPSC351-OperatingSystems-SenderAndReceiver
+# CPSC351-OperatingSystems-Sender and Receiver
 
-## **Authors: Team Kernel Kings - Abel Mendoza, Christian Marshall, Fernando Cerna, Gilbert Espino Solis, Sohrab Bahari**
+## **Authors: Team Kernel Kings -** 
+
+**Abel Mendoza: abel_mendoza10@csu.fullerton.edu**
+
+**Christian Marshall:**
+
+**Fernando Cerna: fernandocerna94@csu.fullerton.edu**
+
+**Gilbert Espino Solis: Soccergilberto@csu.Fullerton.edu**
+
+**Sohrab Bahari:**
+
+---
+
+## Introduction
 
 This repository contains the code for a simple sender and receiver program implemented in C, which demonstrates inter-process communication using shared memory and message queues in an operating system.
 
@@ -69,7 +83,6 @@ See Doc: [https://docs.google.com/document/d/1le0dxFglva1m8F39k4EDe-hh32uZOH5evq
 ## Contributing
 
 Contributions to this repository are welcome. If you find any issues or have suggestions for improvements, please create an issue or submit a pull request.
-
 
 ## License
 
