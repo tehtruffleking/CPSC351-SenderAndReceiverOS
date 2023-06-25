@@ -66,16 +66,6 @@ void init() {
 }
 
 void cleanUp(int* shmid, int* msqid, void* sharedMemPtr) {
-    if (shmctl(*shmid, IPC_RMID, NULL) == -1) {
-        perror("shmctl");
-        exit(1);
-    }
-
-    if (msgctl(*msqid, IPC_RMID, NULL) == -1) {
-        perror("msgctl");
-        exit(1);
-    }
-
     if (shmdt(sharedMemPtr) == -1) {
         perror("shmdt");
         exit(1);
