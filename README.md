@@ -72,11 +72,7 @@ Replace `<output_filename>` with the desired name of the file to save the receiv
 
 7. The receiver program will create the `<output_filename>` file and write the received data into it.
 
-
-
-
-
-
+   ![1687734405623](image/README/1687734405623.png)
 
 ## Additional Files
 
