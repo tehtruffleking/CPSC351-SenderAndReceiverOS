@@ -85,12 +85,6 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
 
-    struct sigaction sa;
-    sa.sa_handler = handleSIGINT;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0;
-    sigaction(SIGINT, &sa, NULL);
-
     struct message msg;
 
     init();
